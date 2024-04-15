@@ -12,20 +12,20 @@ function saveChanges() {
     // For simplicity, I'll omit those steps here
 
     // Example GitHub API endpoint
-    var githubEndpoint = 'https://api.github.com/repos/<username>/<repository>/contents/index.html';
+    var githubEndpoint = 'https://api.github.com/repos/inesstkhay/lamachine/contents/index.html';
 
     // Example commit data
     var commitData = {
         message: 'Update content via web page',
         content: btoa(unescape(encodeURIComponent('<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Editable Web Page with Drawing</title>\n</head>\n<body>\n<h1>' + title + '</h1>\n<div>\n<p>' + content + '</p>\n</div>\n<img src="' + drawingData + '" alt="Drawing">\n</body>\n</html>'))),
-        sha: 'current_sha_of_file' // Replace with the current SHA of the file
+        sha: '164e356f996a56101cc2b13b21580ed296ff2fa8' // Replace with the current SHA of the file
     };
 
     // Send a PUT request to update the file
     fetch(githubEndpoint, {
         method: 'PUT',
         headers: {
-            'Authorization': 'token YOUR_GITHUB_TOKEN',
+            'Authorization': 'token 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',
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(commitData)
