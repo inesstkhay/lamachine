@@ -25,7 +25,7 @@ function saveChanges() {
     fetch(githubEndpoint, {
         method: 'PUT',
         headers: {
-            'Authorization': 'token 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',
+            'Authorization': 'token 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',
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(commitData)
