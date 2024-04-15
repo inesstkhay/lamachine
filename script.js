@@ -1,67 +1,54 @@
-// Function to save changes to GitHub
-function saveChanges() {
-    var title = document.getElementById("editableTitle").innerText;
-    var content = document.getElementById("editableContent").innerText;
 
-    // Save drawing as image data
-    var canvas = document.getElementById('drawingCanvas');
-    var drawingData = canvas.toDataURL();
+// FIREBASE
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Call GitHub API to commit changes
-    // This part would typically require authentication and authorization
-    // For simplicity, I'll omit those steps here
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD7lBMTrJkTpuG8_CsOXPhVmCmTtIqPftc",
+  authDomain: "lamachine-9f4a2.firebaseapp.com",
+  projectId: "lamachine-9f4a2",
+  storageBucket: "lamachine-9f4a2.appspot.com",
+  messagingSenderId: "962211356113",
+  appId: "1:962211356113:web:09aab638baf7883f61d4f0",
+  measurementId: "G-N4MCT0PEBL"
+};
 
-    // Example GitHub API endpoint
-    var githubEndpoint = 'https://api.github.com/repos/inesstkhay/lamachine/contents/index.html';
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    // Example commit data
-    var commitData = {
-        message: 'Update content via web page',
-        content: btoa(unescape(encodeURIComponent('<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Editable Web Page with Drawing</title>\n</head>\n<body>\n<h1>' + title + '</h1>\n<div>\n<p>' + content + '</p>\n</div>\n<img src="' + drawingData + '" alt="Drawing">\n</body>\n</html>'))),
-        sha: '164e356f996a56101cc2b13b21580ed296ff2fa8' // Replace with the current SHA of the file
-    };
-
-    // Send a PUT request to update the file
-    fetch(githubEndpoint, {
-        method: 'PUT',
-        headers: {
-            'Authorization': 'token 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',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(commitData)
-    }).then(response => {
-        if (response.ok) {
-            alert('Changes saved successfully!');
+// Function to fetch content from Firestore
+function fetchContent() {
+    const testRef = db.collection('testdata').doc('test');
+    testRef.get().then((doc) => {
+        if (doc.exists) {
+            const testData = doc.data().test;
+            document.getElementById('testData').innerText = testData;
         } else {
-            alert('Failed to save changes.');
+            console.log("No such document!");
         }
-    }).catch(error => {
-        console.error('Error:', error);
+    }).catch((error) => {
+        console.log("Error getting document:", error);
     });
 }
 
-// JavaScript for drawing on canvas
-var canvas = document.getElementById('drawingCanvas');
-var ctx = canvas.getContext('2d');
-var isDrawing = false;
+// Function to save edited content back to Firestore
+function saveChanges() {
+    const editedContent = document.getElementById('testData').innerText;
+    const testRef = db.collection('testdata').doc('test');
+    testRef.set({ test: editedContent })
+        .then(() => {
+            console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+            console.error("Error updating document: ", error);
+        });
+}
 
-canvas.addEventListener('mousedown', function (e) {
-    isDrawing = true;
-    ctx.beginPath();
-    ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-});
-
-canvas.addEventListener('mousemove', function (e) {
-    if (isDrawing) {
-        ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-        ctx.stroke();
-    }
-});
-
-canvas.addEventListener('mouseup', function () {
-    isDrawing = false;
-});
-
-canvas.addEventListener('mouseleave', function () {
-    isDrawing = false;
-});
+// Call fetchContent() when the page loads
+window.onload = fetchContent;

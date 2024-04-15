@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editable Web Page with Drawing</title>
+    <title>Editable Web Page</title>
     <style>
         canvas {
             border: 1px solid #000;
         }
     </style>
+    <!-- Include Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.2/firebase-firestore.js"></script>
 </head>
 <body>
-    <h1 contenteditable="true" id="editableTitle">Welcome to My Page</h1>
-    <div contenteditable="true" id="editableContent">
-        <p>This is editable content.</p>
-    </div>
-    <canvas id="drawingCanvas" width="400" height="200"></canvas>
-    <button onclick="saveChanges()">Save Changes</button>
-
+    <div id="testData" contenteditable="true"></div>
     <script src="script.js"></script>
 </body>
 </html>
